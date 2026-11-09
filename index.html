@@ -351,7 +351,7 @@ function commitMessage(ops) {
   return `Jurnal: ${parts.join(' · ') || 'actualizare'}`;
 }
 
-const APP_VERSION = 'v1';
+const APP_VERSION = 'v2';
 const PHOTO_BRANCH = 'poze';
 async function commitTo(branch, build, message) {
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -827,7 +827,7 @@ function viewMessages() {
 function viewProfile() {
   const i = S.intake || {}, t = S.profile?.targets || {};
   return `<section class="card"><h2>${esc(i.name || 'Profilul meu')}</h2>
-    ${i.submittedAt ? `<dl class="kv">${i.age ? `<dt>Vârsta</dt><dd>${esc(i.age)} ani</dd>` : ''}${i.height ? `<dt>Înălțimea</dt><dd>${esc(i.height)} cm</dd>` : ''}${i.weight ? `<dt>Greutatea (la început)</dt><dd>${esc(i.weight)} kg</dd>` : ''}</dl>` : '<p>Formularul de început nu e completat încă.</p>'}
+    ${i.submittedAt ? `<dl class="kv">${i.age ? `<dt>Vârsta</dt><dd>${esc(i.age)} ani</dd>` : ''}${i.height ? `<dt>Înălțimea</dt><dd>${esc(i.height)} cm</dd>` : ''}${i.weightGoal ? `<dt>Greutatea dorită</dt><dd>${esc(i.weightGoal)} kg</dd>` : ''}</dl>` : '<p>Formularul de început nu e completat încă.</p>'}
     <button class="btn ${i.submittedAt ? '' : 'primary'}" data-act="intake">${i.submittedAt ? 'Modifică formularul' : 'Completează formularul'}</button></section>
   <section class="card"><h3>Țintele mele</h3>${t.kcal ? `<dl class="kv"><dt>Calorii</dt><dd>${fmtN(t.kcal, 0)} kcal/zi</dd><dt>Proteine</dt><dd>${fmtN(t.protein, 0)} g/zi</dd><dt>Fibre</dt><dd>${fmtN(t.fiber ?? 25, 0)} g/zi</dd>${t.weightGoal ? `<dt>Obiectiv greutate</dt><dd>${fmtN(t.weightGoal, 1)} kg</dd>` : ''}</dl>${t.note ? `<p class="note">${esc(t.note)}</p>` : ''}` : '<p class="muted">Le stabilește Claude după formularul de început.</p>'}
     ${Object.keys(t.nutrients || {}).length ? `<p class="small">Ținte personale: ${Object.entries(t.nutrients).map(([k, v]) => `${esc(NK[k]?.name || k)} ${fmtN(v, 1)} ${NK[k]?.unit || ''} (VNR ${fmtN(NK[k]?.vnr, 1)})`).join(' · ')}</p>` : ''}</section>
@@ -845,11 +845,9 @@ function intakeSheet() {
     <p class="muted small">Completează cât știi; orice câmp poate rămâne gol. Poți reveni oricând din Profil.</p>
     ${txt('name', 'Cum să-ți spun?', 'ex. Maria')}
     <div class="grid2">${txt('age', 'Vârsta (ani)', 'ex. 62', 'num')}${txt('height', 'Înălțimea (cm)', 'ex. 162', 'num')}
-    ${txt('weight', 'Greutatea acum (kg)', 'ex. 52', 'num')}${txt('weightBefore', 'Greutatea obișnuită, înainte (kg)', 'ex. 60', 'num')}</div>
-    ${txt('lossWhen', 'În cât timp ai slăbit?', 'ex. în ultimele 4 luni')}
+    ${txt('weightGoal', 'Greutatea dorită (kg)', 'ex. 58', 'num')}${txt('weightBefore', 'Greutatea obișnuită, înainte (kg)', 'ex. 60', 'num')}</div>
     <span class="eyebrow">Ai vreuna dintre acestea?</span>
     <div class="chips">${CONDITIONS.map(c => `<button type="button" class="chip" data-cond="${esc(c)}" aria-pressed="${cond.has(c)}">${esc(c)}</button>`).join('')}</div>
-    ${area('allergiesMeds', 'Medicamentele la care ai avut reacții alergice', 'ex. amoxicilină: urticarie')}
     ${area('allergiesFood', 'Alimente la care ai alergie sau intoleranță', 'ex. lapte (balonare), căpșuni')}
     ${area('avoid', 'Ce nu mănânci sau nu-ți place', 'ex. ficat, pește, mâncare picantă')}
     ${area('dietNow', 'Ce regim ai ținut / ce ai voie acum', 'ex. regim fără … de la medic, din martie')}
@@ -863,11 +861,10 @@ function intakeSheet() {
   $$('[data-cond]', p).forEach(b => b.onclick = () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'));
   $('#in-save').onclick = () => {
     const out = {};
-    $$('[data-in]', p).forEach(x => { const v = x.value.trim(); out[x.dataset.in] = ['age', 'height', 'weight', 'weightBefore'].includes(x.dataset.in) ? toNum(v) : v; });
+    $$('[data-in]', p).forEach(x => { const v = x.value.trim(); out[x.dataset.in] = ['age', 'height', 'weightGoal', 'weightBefore'].includes(x.dataset.in) ? toNum(v) : v; });
     out.conditions = $$('[data-cond][aria-pressed="true"]', p).map(b => b.dataset.cond);
     out.submittedAt = new Date().toISOString(); out.status = 'nou';
     queueOp({ file: 'config/intake.json', key: null, patch: out });
-    if (out.weight && !S.days[today()]?.weight) saveDay(today(), { weight: out.weight });
     closeSheet(); toast('Mulțumesc! Claude îți scrie după ce citește formularul.');
   };
 }
