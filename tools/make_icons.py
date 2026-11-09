@@ -1,4 +1,5 @@
-"""Draws the app icon (sage background, warm bowl, two leaves) as PNGs without external libraries."""
+"""Draws the app icon (Farfuria mea: a Horezu-style plate split into four food groups on a brown-red background) as PNGs without external libraries."""
+import math
 import struct
 import sys
 import zlib
@@ -6,8 +7,9 @@ from pathlib import Path
 
 
 def draw(size):
-    bg_top, bg_bot = (78, 112, 88), (52, 82, 62)
-    bowl, rim, leaf, leaf2, vein = (232, 140, 94), (246, 214, 190), (168, 214, 150), (120, 186, 120), (60, 110, 70)
+    bg, cream, ochre = (110, 47, 23), (252, 244, 230), (213, 154, 42)
+    quarters = ((94, 143, 53), (194, 85, 42), (213, 154, 42), (138, 63, 99))  # legume, proteine, cereale, fructe (clockwise from top-right)
+    dots = [(50 + 29 * math.cos(2 * math.pi * k / 30), 50 + 29 * math.sin(2 * math.pi * k / 30)) for k in range(30)]
     ss = 3
     rows = []
     for py in range(size):
@@ -18,23 +20,15 @@ def draw(size):
                 for sx in range(ss):
                     x = (px + (sx + .5) / ss) * 100 / size
                     y = (py + (sy + .5) / ss) * 100 / size
-                    t = y / 100
-                    c = tuple(round(bg_top[i] + (bg_bot[i] - bg_top[i]) * t) for i in range(3))
-                    # leaves: two ellipses tilted, above the bowl (inside the maskable safe zone)
-                    for cx, cy, ang, col in ((42, 40, -0.6, leaf), (58, 38, 0.6, leaf2)):
-                        import math
-                        dx, dy = x - cx, y - cy
-                        u = dx * math.cos(ang) + dy * math.sin(ang)
-                        v = -dx * math.sin(ang) + dy * math.cos(ang)
-                        if (u / 6.5) ** 2 + (v / 14) ** 2 < 1:
-                            c = vein if abs(u) < 0.6 else col
-                    # bowl: lower half-disc with a rim
-                    if 52 <= y <= 56 and 20 <= x <= 80:
-                        c = rim
-                    elif y > 56 and (x - 50) ** 2 + ((y - 56) * 1.35) ** 2 < 30 ** 2:
-                        c = bowl
-                    if 77 <= y <= 81 and 40 <= x <= 60:
-                        c = bowl
+                    dx, dy = x - 50, y - 50
+                    r = math.hypot(dx, dy)
+                    c = bg
+                    if r < 34:
+                        c = cream
+                        if any((x - ux) ** 2 + (y - uy) ** 2 < 1.5 ** 2 for ux, uy in dots):
+                            c = ochre
+                        if r < 22 and abs(dx) > 1.2 and abs(dy) > 1.2:
+                            c = quarters[(0 if dx > 0 else 3) if dy < 0 else (1 if dx > 0 else 2)]
                     for i in range(3):
                         acc[i] += c[i]
             row += bytes(round(v / ss / ss) for v in acc)

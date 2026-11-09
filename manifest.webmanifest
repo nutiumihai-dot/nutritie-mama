@@ -1,14 +1,14 @@
 {
-  "name": "Nutriția mea",
-  "short_name": "Nutriția",
+  "name": "Farfuria mea",
+  "short_name": "Farfuria",
   "description": "Jurnal de mese cu calorii, proteine, fibre, vitamine și minerale, cu deficitele față de VNR.",
   "lang": "ro",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#3E5B47",
-  "theme_color": "#3E5B47",
+  "background_color": "#6E2F17",
+  "theme_color": "#6E2F17",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

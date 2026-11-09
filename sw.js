@@ -1,6 +1,6 @@
 // Network-first for the app's own files so updates arrive on the next open; cached copy when offline.
 // GitHub API calls are never cached here: the page talks to api.github.com directly.
-const CACHE = 'nm-v3';
+const CACHE = 'nm-v4';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -32,8 +32,8 @@ self.addEventListener('fetch', e => {
 // Push from the coach's PC (antrenor/notifica.py): show it, and open the Messages tab on tap.
 self.addEventListener('push', e => {
   let d = {};
-  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { title: 'Nutriția mea', body: e.data ? e.data.text() : '' }; }
-  e.waitUntil(self.registration.showNotification(d.title || 'Mesaj de la Claude', {
+  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { title: 'Farfuria mea', body: e.data ? e.data.text() : '' }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Mesaj de la Lingurică', {
     body: d.body || '', icon: 'icon-192.png', badge: 'icon-192.png', tag: d.tag || 'coach', renotify: true, data: { url: d.url || './#mesaje' }
   }));
 });
