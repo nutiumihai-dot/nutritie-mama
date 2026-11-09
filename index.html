@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3E5B47">
+<title>Nutriția mea</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Calm kitchen-garden look: sage header, warm paper cards, large readable type; one column on phones, five tabs at the bottom. */
+:root {
+  --bg: #F7F3EC;
+  --surface: #FFFFFF;
+  --surface-2: #EFE8DC;
+  --fg: #26332A;
+  --muted: #66705F;
+  --line: #E3DACB;
+  --accent: #3E7A55;
+  --accent-2: #B8572F;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E3EFE5;
+  --head: #3E5B47;
+  --head-fg: #FBF8F2;
+  --head-muted: #CFE0D2;
+  --ok: #2E7D4F;
+  --warn: #A86A00;
+  --bad: #B3362E;
+  --ok-soft: #E2F1E7; --warn-soft: #FBEFD6; --bad-soft: #F8E1DE;
+  --shadow: 0 1px 2px rgba(38, 51, 42, .06), 0 6px 18px rgba(38, 51, 42, .07);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141A16; --surface: #1D2620; --surface-2: #27322A; --fg: #EEF2EC; --muted: #A3B0A2; --line: #33402F;
+    --accent: #6DBA87; --accent-2: #E08A5F; --accent-fg: #10170F; --accent-soft: #23362A;
+    --head: #1E2D23; --head-fg: #F2F5EF; --head-muted: #A9C2AE;
+    --ok: #5CC788; --warn: #E6B04A; --bad: #EE7A70;
+    --ok-soft: #1F3527; --warn-soft: #3A2F17; --bad-soft: #3D2220;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141A16; --surface: #1D2620; --surface-2: #27322A; --fg: #EEF2EC; --muted: #A3B0A2; --line: #33402F;
+  --accent: #6DBA87; --accent-2: #E08A5F; --accent-fg: #10170F; --accent-soft: #23362A;
+  --head: #1E2D23; --head-fg: #F2F5EF; --head-muted: #A9C2AE;
+  --ok: #5CC788; --warn: #E6B04A; --bad: #EE7A70;
+  --ok-soft: #1F3527; --warn-soft: #3A2F17; --bad-soft: #3D2220;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--head); }
+img { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+.wrap { max-width: 680px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; line-height: 1.2; }
+h2 { font-size: 22px; } h3 { font-size: 18px; }
+p { margin: 0; }
+
+.top { background: var(--head); color: var(--head-fg); }
+.top .wrap { padding-block: 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.brand-name { font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+.brand-name span { color: #F2B98F; }
+.sync { font-size: 13px; font-weight: 700; color: var(--head-muted); border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; padding: 4px 12px; background: transparent; }
+.sync.bad { background: var(--bad); border-color: var(--bad); color: #fff; }
+.datebar { display: flex; align-items: center; gap: 8px; }
+.datebar .dlabel { flex: 1; text-align: center; font-weight: 700; font-size: 18px; color: var(--head-fg); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .2); border-radius: 14px; padding: 8px; }
+.iconbtn { width: 46px; height: 44px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); font-size: 24px; line-height: 1; }
+.top .iconbtn { color: var(--head-fg); background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .2); }
+
+main { padding-block: 16px calc(100px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -4px 20px rgba(0, 0, 0, .06); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.tabs .wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding-block: 6px; }
+.tabs button { position: relative; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12.5px; font-weight: 700; color: var(--muted); padding: 6px 0; border-radius: 12px; }
+.tabs svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs [aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+.tabs [data-badge]:not([data-badge=""])::after { content: attr(data-badge); position: absolute; top: 0; right: 18%; min-width: 19px; height: 19px; border-radius: 10px; background: var(--bad); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+.sendbar { position: fixed; left: 0; right: 0; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); z-index: 6; padding-block: 8px; pointer-events: none; }
+.sendbar .btn { pointer-events: auto; }
+body:has(#sendBar:not([hidden])) main { padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); }
+
+.card { background: var(--surface); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; box-shadow: var(--shadow); }
+.card.flat { box-shadow: none; background: transparent; border: 2px dashed var(--line); }
+.card.hi { border: 2px solid var(--accent); }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); } .small { font-size: 14.5px; }
+.empty { color: var(--muted); text-align: center; padding: 8px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.between { justify-content: space-between; }
+.pre { white-space: pre-wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 18px; font-weight: 700; font-size: 16px; min-height: 48px; }
+.btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.btn.warm { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+.btn.ghost { background: transparent; }
+.btn.danger { color: var(--bad); border-color: var(--bad); background: transparent; }
+.btn.sm { padding: 7px 13px; font-size: 14.5px; min-height: 40px; }
+.btn.wide { width: 100%; }
+.btn:disabled { opacity: .5; }
+.linkbtn { border: 0; background: none; color: var(--accent); font-weight: 700; padding: 4px 0; text-decoration: underline; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 2px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-size: 15px; font-weight: 700; min-height: 42px; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+label.f { display: flex; flex-direction: column; gap: 5px; font-size: 15px; color: var(--muted); font-weight: 700; min-width: 0; }
+label.f input, label.f select, label.f textarea, textarea { color: var(--fg); background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: 11px 12px; font-size: 17px; font-weight: 400; width: 100%; min-width: 0; }
+textarea { min-height: 90px; resize: vertical; }
+textarea.long { min-height: 200px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid2 .full { grid-column: 1 / -1; }
+.pill { font-size: 13.5px; font-weight: 700; background: var(--surface-2); border-radius: 9px; padding: 3px 10px; font-variant-numeric: tabular-nums; }
+.pill.pend { background: var(--warn-soft); color: var(--warn); }
+.note { font-size: 15px; color: var(--muted); background: var(--surface-2); border-radius: 10px; padding: 8px 12px; }
+.msg { background: var(--accent-soft); border-radius: 14px; padding: 12px 14px; }
+dl.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+dl.kv dt { color: var(--muted); font-weight: 700; } dl.kv dd { margin: 0; }
+
+/* totals */
+.totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.meter { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.meter .v { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.meter .t { font-size: 13px; color: var(--muted); font-weight: 700; }
+.bar { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+
+/* nutrient rows */
+.nlist { display: flex; flex-direction: column; gap: 4px; }
+.nrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; border: 0; background: none; text-align: left; padding: 7px 4px; border-radius: 10px; width: 100%; }
+.nrow:hover { background: var(--surface-2); }
+.nrow .nm { font-weight: 700; font-size: 16px; }
+.nrow .nm small { font-weight: 400; color: var(--muted); font-size: 13.5px; }
+.nrow .pc { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 15px; }
+.nrow .track { grid-column: 1 / -1; position: relative; height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+.nrow .track span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--accent); }
+.nrow .track i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fg); opacity: .45; }
+.nrow.ok .track span { background: var(--ok); } .nrow.warn .track span { background: var(--warn); } .nrow.bad .track span { background: var(--bad); }
+.st { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; border-radius: 8px; padding: 2px 8px; }
+.st.ok { color: var(--ok); background: var(--ok-soft); } .st.warn { color: var(--warn); background: var(--warn-soft); } .st.bad { color: var(--bad); background: var(--bad-soft); }
+.lack { display: flex; flex-direction: column; gap: 8px; }
+.lack li { margin-left: -6px; }
+
+/* meals */
+.meal { display: flex; flex-direction: column; gap: 8px; padding-block: 12px; border-top: 1px solid var(--line); }
+.meal:first-of-type { border-top: 0; padding-top: 0; }
+.dish { display: flex; flex-direction: column; gap: 3px; }
+.thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumbs img { width: 76px; height: 76px; object-fit: cover; border-radius: 12px; background: var(--surface-2); }
+.thumbs button { border: 0; padding: 0; background: none; }
+.item-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border: 2px solid var(--line); border-radius: 14px; }
+.item-row .full { grid-column: 1 / -1; }
+.ph-thumb { position: relative; display: inline-flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--muted); }
+.ph-thumb .x { position: absolute; top: -6px; right: -6px; width: 26px; height: 26px; border-radius: 13px; border: 0; background: var(--bad); color: #fff; font-weight: 700; }
+.file-pdf { display: inline-flex; align-items: center; justify-content: center; width: 76px; height: 76px; border-radius: 12px; background: var(--surface-2); font-weight: 700; color: var(--accent-2); border: 0; }
+
+/* messages */
+.bubble.me { background: var(--accent-soft); align-self: flex-end; max-width: 92%; box-shadow: none; }
+.day-sep { font-family: var(--font-body); font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 6px; }
+
+/* labs */
+table.lab { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.lab th, table.lab td { text-align: left; padding: 7px 6px; border-top: 1px solid var(--line); vertical-align: top; }
+table.lab th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; border-top: 0; }
+table.lab td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* charts */
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--muted); font-size: 12.5px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .ref { stroke: var(--fg); stroke-width: 1.5; stroke-dasharray: 5 4; opacity: .55; }
+.chart .ref-t { fill: var(--fg); font-weight: 700; opacity: .75; }
+.chart .bar { fill: var(--accent); }
+.chart .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .dot { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.chart .hit { fill: transparent; }
+.chart .hit:hover, .chart .hit.on { fill: var(--fg); opacity: .06; }
+.chart .last { fill: var(--fg); font-weight: 700; font-size: 14px; }
+.tip { position: fixed; z-index: 40; background: var(--fg); color: var(--bg); font-size: 14px; font-weight: 700; padding: 7px 11px; border-radius: 10px; pointer-events: none; transform: translate(-50%, calc(-100% - 10px)); white-space: nowrap; box-shadow: var(--shadow); }
+
+.sheet { position: fixed; inset: 0; z-index: 20; background: rgba(10, 16, 12, .55); display: flex; align-items: flex-end; justify-content: center; }
+.sheet-panel { background: var(--bg); width: 100%; max-width: 680px; max-height: 94%; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 18px max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(92px + env(safe-area-inset-bottom, 0px)); z-index: 30; background: var(--fg); color: var(--bg); padding: 11px 18px; border-radius: 12px; font-size: 15.5px; font-weight: 700; max-width: calc(100% - 32px); box-shadow: var(--shadow); }
+@media (prefers-reduced-motion: no-preference) {
+  .sheet-panel { animation: up .2s ease-out; } @keyframes up { from { transform: translateY(30px); opacity: .6; } }
+  .btn:active, .chip:active { transform: scale(.97); }
+}
+@media (min-width: 760px) { .sheet { align-items: center; } .sheet-panel { border-radius: 22px; max-height: 88%; } }
+@media (max-width: 380px) { .totals { gap: 8px; } .meter .v { font-size: 24px; } .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="brand-name">Nutriția <span>mea</span></span><button class="sync" id="sync" data-act="pull"></button></div>
+    <div class="datebar" id="datebar">
+      <button class="iconbtn" data-act="day" data-n="-1" aria-label="Ziua anterioară">‹</button>
+      <button class="dlabel" id="dateLabel" data-act="today" aria-label="Mergi la azi"></button>
+      <button class="iconbtn" data-act="day" data-n="1" aria-label="Ziua următoare">›</button>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<div class="sendbar" id="sendBar" hidden><div class="wrap"><button class="btn warm wide" data-act="send" id="sendBtn">Trimite</button></div></div>
+<nav class="tabs" aria-label="Secțiuni">
+  <div class="wrap">
+    <button data-act="tab" data-tab="azi"><svg viewBox="0 0 24 24"><path d="M4 11h16a8 8 0 01-16 0z"/><path d="M8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4"/></svg>Azi</button>
+    <button data-act="tab" data-tab="grafice"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 16v-4M12 16V7M17 16v-7"/></svg>Grafice</button>
+    <button data-act="tab" data-tab="analize"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M7.5 14h9"/></svg>Analize</button>
+    <button data-act="tab" data-tab="mesaje"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Mesaje</button>
+    <button data-act="tab" data-tab="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profil</button>
+  </div>
+</nav>
+<div class="sheet" id="sheet" hidden><div class="sheet-panel" id="sheetPanel" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden></div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+const today = () => iso(new Date());
+const daysBetween = (a, b) => Math.round((parse(b) - parse(a)) / 86400000);
+const ZILE = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
+const LUNI = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+const fmtDate = s => { const d = parse(s); return `${ZILE[d.getDay()]}, ${d.getDate()} ${LUNI[d.getMonth()]}`; };
+const fmtShort = s => { const d = parse(s); return `${d.getDate()} ${LUNI[d.getMonth()]}`; };
+const toNum = v => { const t = String(v ?? '').replace(',', '.').trim(); if (t === '') return null; const n = Number(t); return isFinite(n) ? n : null; };
+const fmtN = (v, dec = 1) => v == null || isNaN(v) ? '–' : Number(v).toLocaleString('ro-RO', { maximumFractionDigits: dec });
+const uid = () => 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+function merge(base, patch) { const out = isObj(base) ? { ...base } : {}; for (const [k, v] of Object.entries(patch || {})) out[k] = isObj(v) ? merge(out[k], v) : v; return out; }
+
+/* ---------- nutrients and their reference values ----------
+   VNR = valorile nutriționale de referință pentru adulți din Regulamentul (UE) 1169/2011, anexa XIII.
+   The coach may set personal targets in config/profile.json targets.nutrients (e.g. more vitamin D);
+   deficits are judged against the target, which is the VNR unless overridden. */
+const NUTR = [
+  ['vitA', 'Vitamina A', 'µg', 800, 'vit'], ['vitD', 'Vitamina D', 'µg', 5, 'vit'], ['vitE', 'Vitamina E', 'mg', 12, 'vit'], ['vitK', 'Vitamina K', 'µg', 75, 'vit'],
+  ['vitC', 'Vitamina C', 'mg', 80, 'vit'], ['b1', 'B1 (tiamină)', 'mg', 1.1, 'vit'], ['b2', 'B2 (riboflavină)', 'mg', 1.4, 'vit'], ['b3', 'B3 (niacină)', 'mg', 16, 'vit'],
+  ['b5', 'B5 (acid pantotenic)', 'mg', 6, 'vit'], ['b6', 'Vitamina B6', 'mg', 1.4, 'vit'], ['b7', 'B7 (biotină)', 'µg', 50, 'vit'], ['b9', 'B9 (folat)', 'µg', 200, 'vit'],
+  ['b12', 'Vitamina B12', 'µg', 2.5, 'vit'],
+  ['ca', 'Calciu', 'mg', 800, 'min'], ['fe', 'Fier', 'mg', 14, 'min'], ['mg', 'Magneziu', 'mg', 375, 'min'], ['zn', 'Zinc', 'mg', 10, 'min'],
+  ['k', 'Potasiu', 'mg', 2000, 'min'], ['se', 'Seleniu', 'µg', 55, 'min'], ['iod', 'Iod', 'µg', 150, 'min']
+].map(([key, name, unit, vnr, group]) => ({ key, name, unit, vnr, group }));
+const NK = Object.fromEntries(NUTR.map(n => [n.key, n]));
+const target = key => S.profile?.targets?.nutrients?.[key] ?? NK[key].vnr;
+// below 50% of the target = deficit, 50–80% = under target, from 80% = fine
+const STATUS = { ok: ['✓', 'Bine'], warn: ['!', 'Sub țintă'], bad: ['▼', 'Deficit'] };
+const statusOf = pct => pct == null ? null : pct < 50 ? 'bad' : pct < 80 ? 'warn' : 'ok';
+const stHTML = s => s ? `<span class="st ${s}">${STATUS[s][0]} ${STATUS[s][1]}</span>` : '';
+
+const MEALT = [['mic-dejun', 'Mic dejun'], ['gustare1', 'Gustare de dimineață'], ['pranz', 'Prânz'], ['gustare', 'Gustare'], ['cina', 'Cină']];
+const PREP = ['', 'crud', 'fiert', 'la abur', 'la cuptor', 'la grătar', 'prăjit', 'altul'];
+const CONDITIONS = ['Anemie', 'Osteoporoză / osteopenie', 'Menopauză', 'Tiroidă', 'Diabet / glicemie mare', 'Tensiune mare', 'Colesterol mare', 'Probleme digestive', 'Probleme de rinichi', 'Probleme cu dinții / mestecatul'];
+
+const S = { tab: 'azi', date: today(), profile: null, intake: null, index: {}, days: {}, msgMap: {}, reqMap: {}, favMap: {}, labs: {}, messages: [], requests: [], ready: false, sync: 'ok', range: 30, nutr: 'vitD', confirm: null };
+try { const t = localStorage.getItem('nm-tab'); if (t) S.tab = t; } catch (e) {}
+if (/^#(azi|grafice|analize|mesaje|profil)$/.test(location.hash)) S.tab = location.hash.slice(1);
+
+/* ---------- GitHub storage ----------
+   Private repo: days/AAAA-LL.json (meals, weight), messages/, requests/ (monthly maps), favorites.json,
+   analize.json + analize/ (lab result files, kept for good), config/intake.json (her first form),
+   config/profile.json (targets, written by the coach). Meal photos go to the "poze" branch and are dropped after 7 days.
+   Every save is queued on the device and sent right away as one commit; offline it waits. */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+};
+const GH = store.get('nm-gh', null) || { owner: 'nutiumihai-dot', repo: 'nutritie-mama-date', branch: 'main', token: '' };
+let QUEUE = store.get('nm-queue', []);
+const FILES = {};
+const loadedMonths = new Set();
+const enc = s => { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); };
+const dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0)));
+class GhError extends Error { constructor(status, msg) { super(msg); this.status = status; } }
+const cpath = p => p.split('/').map(encodeURIComponent).join('/');
+async function gh(path, opts = {}) {
+  try {
+    return await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}${path}`, { cache: 'no-store', ...opts,
+      headers: { Authorization: `Bearer ${GH.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {}) } });
+  } catch (e) { throw new GhError(0, 'offline'); }
+}
+async function ghJson(path, opts) { const r = await gh(path, opts); if (!r.ok) throw new GhError(r.status, await r.text()); return r.json(); }
+async function readFile(path) {
+  const r = await gh(`/contents/${cpath(path)}?ref=${encodeURIComponent(GH.branch)}`);
+  if (r.status === 404) return (FILES[path] = { data: null });
+  if (!r.ok) throw new GhError(r.status, await r.text());
+  const j = await r.json();
+  return (FILES[path] = { data: JSON.parse(dec(j.content)) });
+}
+async function loadJson(path) { return (await readFile(path)).data; }
+async function readAt(path, ref) {
+  const r = await gh(`/contents/${cpath(path)}?ref=${encodeURIComponent(ref)}`);
+  if (r.status === 404) return null;
+  if (!r.ok) throw new GhError(r.status, await r.text());
+  return dec((await r.json()).content);
+}
+function errText(e) {
+  if (e?.status === 0) return 'Nu ai internet acum. Ce ai notat rămâne pe telefon și pleacă singur când revine internetul.';
+  if (e?.status === 401) return 'Cheia de acces nu mai e recunoscută. Cere-i lui Mihai una nouă.';
+  if (e?.status === 403) return 'Cheia de acces nu are voie să scrie. Cere-i lui Mihai să o verifice.';
+  if (e?.status === 404) return 'Cheia de acces nu vede datele. Cere-i lui Mihai să o verifice.';
+  return 'Trimiterea nu a reușit. Ce ai notat a rămas pe telefon; încearcă din nou.';
+}
+
+function applyLocal(op) {
+  if (op.blob) return;
+  if (op.file.startsWith('days/')) S.days[op.key] = merge(S.days[op.key], op.patch);
+  else if (op.file === 'favorites.json') { if (op.patch == null) delete S.favMap[op.key]; else S.favMap[op.key] = merge(S.favMap[op.key], op.patch); }
+  else if (op.file === 'analize.json') S.labs[op.key] = merge(S.labs[op.key], op.patch);
+  else if (op.file === 'config/intake.json') S.intake = merge(S.intake, op.patch);
+  else if (op.file.startsWith('requests/')) S.reqMap[op.key] = merge(S.reqMap[op.key], op.patch);
+  derive();
+}
+function applyOp(data, o) {
+  if (o.replace) { const out = { ...data }; if (o.patch == null) delete out[o.key]; else out[o.key] = o.patch; return out; }
+  return o.key == null ? merge(data, o.patch) : { ...data, [o.key]: merge(data[o.key], o.patch) };
+}
+function saveQueue() { if (!store.set('nm-queue', QUEUE)) toast('Memoria telefonului e plină. Apasă „Trimite” cu internet pornit.'); }
+let sendT;
+function queueOp(op) {
+  QUEUE.push(op); saveQueue(); applyLocal(op); cacheSave(); schedule();
+  clearTimeout(sendT); sendT = setTimeout(() => sendAll(), 1500);
+}
+function saveDay(date, patch) { queueOp({ file: `days/${date.slice(0, 7)}.json`, key: date, patch: { date, ...patch } }); }
+
+function commitMessage(ops) {
+  const parts = [];
+  const days = [...new Set(ops.filter(o => o.file.startsWith('days/')).map(o => o.key))].sort().map(fmtShort);
+  if (days.length) parts.push(days.join(', '));
+  const np = ops.filter(o => o.blob && o.branch === PHOTO_BRANCH).length;
+  if (np) parts.push(np === 1 ? '1 poză' : `${np} poze`);
+  if (ops.some(o => o.file === 'analize.json')) parts.push('analize');
+  if (ops.some(o => o.file === 'config/intake.json')) parts.push('formularul inițial');
+  if (ops.some(o => o.file === 'favorites.json')) parts.push('favorite');
+  if (ops.some(o => o.file.startsWith('requests/'))) parts.push('mesaj către Claude');
+  return `Jurnal: ${parts.join(' · ') || 'actualizare'}`;
+}
+
+const APP_VERSION = 'v1';
+const PHOTO_BRANCH = 'poze';
+async function commitTo(branch, build, message) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    let head = null, baseTree = null;
+    const r = await gh(`/git/ref/heads/${branch}`);
+    if (r.ok) { head = (await r.json()).object.sha; baseTree = (await ghJson(`/git/commits/${head}`)).tree.sha; }
+    else if (r.status !== 404 && r.status !== 409) throw new GhError(r.status, await r.text());
+    const { entries, written } = await build(head);
+    const t = await ghJson('/git/trees', { method: 'POST', body: JSON.stringify(baseTree ? { base_tree: baseTree, tree: entries } : { tree: entries }) });
+    const c = await ghJson('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: t.sha, parents: head ? [head] : [] }) });
+    const u = head
+      ? await gh(`/git/refs/heads/${branch}`, { method: 'PATCH', body: JSON.stringify({ sha: c.sha, force: false }) })
+      : await gh('/git/refs', { method: 'POST', body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: c.sha }) });
+    if (u.ok) return written || {};
+    if (u.status !== 422 && u.status !== 409) throw new GhError(u.status, await u.text());
+  }
+  throw new GhError(409, 'conflict');
+}
+const blobEntry = async o => ({ path: o.file, mode: '100644', type: 'blob', sha: (await ghJson('/git/blobs', { method: 'POST', body: JSON.stringify({ content: o.b64, encoding: 'base64' }) })).sha });
+let sending = false;
+async function sendAll() {
+  const ops = [...QUEUE];
+  if (sending || !ops.length || !GH.token) return false;
+  sending = true; S.sync = 'sending'; renderChrome();
+  let ok = false;
+  try {
+    // meal photos -> branch "poze"; lab files -> main, in the same commit as analize.json
+    const photos = ops.filter(o => o.blob && o.branch === PHOTO_BRANCH);
+    if (photos.length) await commitTo(PHOTO_BRANCH, async () => ({ entries: await Promise.all(photos.map(blobEntry)) }), `Poze: ${photos.length}`);
+    const rest = ops.filter(o => !(o.blob && o.branch === PHOTO_BRANCH));
+    if (rest.length) {
+      await commitTo(GH.branch, async head => {
+        const entries = await Promise.all(rest.filter(o => o.blob).map(blobEntry));
+        const json = rest.filter(o => !o.blob);
+        for (const file of [...new Set(json.map(o => o.file))]) {
+          const raw = await readAt(file, head);
+          let data = raw ? JSON.parse(raw) : {};
+          json.filter(o => o.file === file).forEach(o => { data = applyOp(data, o); });
+          entries.push({ path: file, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 1) + '\n' });
+        }
+        return { entries };
+      }, commitMessage(rest));
+    }
+    QUEUE = QUEUE.filter(o => !ops.includes(o)); saveQueue();
+    ops.filter(o => o.blob && !PHOTO[o.file] && o.mime?.startsWith('image/')).forEach(o => { PHOTO[o.file] = `data:${o.mime};base64,${o.b64}`; });
+    S.sync = 'ok'; ok = true;
+  } catch (e) {
+    S.sync = e.status === 0 ? 'offline' : 'error';
+    if (e.status !== 0) toast(errText(e));
+  }
+  sending = false; renderChrome(); schedule();
+  if (ok && QUEUE.length) setTimeout(sendAll, 500);
+  return ok;
+}
+
+/* ---------- loading, cache ---------- */
+const CACHE_DAYS = 92;
+function cacheSave() {
+  const from = addDays(today(), -CACHE_DAYS);
+  const recent = obj => Object.fromEntries(Object.entries(obj || {}).filter(([k, v]) => (v?.date || k) >= from));
+  store.set('nm-cache', { index: S.index, profile: S.profile, intake: S.intake, favMap: S.favMap, labs: S.labs, days: recent(S.days), msgMap: recent(S.msgMap), reqMap: recent(S.reqMap) });
+}
+function cacheLoad() {
+  const c = store.get('nm-cache', null); if (!c) return false;
+  Object.assign(S, { index: c.index || {}, profile: c.profile, intake: c.intake, favMap: c.favMap || {}, labs: c.labs || {}, days: c.days || {}, msgMap: c.msgMap || {}, reqMap: c.reqMap || {} });
+  derive(); S.ready = true; return true;
+}
+function derive() {
+  S.requests = Object.values(S.reqMap || {}).sort((a, b) => (Date.parse(b.ts) || 0) - (Date.parse(a.ts) || 0));
+  S.messages = Object.entries(S.msgMap || {}).map(([id, m]) => ({ id, ...m })).sort((a, b) => (Date.parse(b.ts) || 0) - (Date.parse(a.ts) || 0));
+}
+const monthsBetween = (a, b) => { const out = []; let m = a.slice(0, 7); const end = b.slice(0, 7); while (m <= end) { out.push(m); const [y, mm] = m.split('-').map(Number); m = mm === 12 ? `${y + 1}-01` : `${y}-${pad(mm + 1)}`; } return out; };
+async function loadMonth(m) {
+  const [d, ms, rq] = await Promise.all([`days/${m}.json`, `messages/${m}.json`, `requests/${m}.json`].map(loadJson));
+  Object.assign(S.days, d || {}); Object.assign(S.msgMap, ms || {}); Object.assign(S.reqMap, rq || {});
+  loadedMonths.add(m);
+}
+async function ensureRange(from, to) {
+  const need = monthsBetween(from, to).filter(m => !loadedMonths.has(m));
+  if (!need.length || !GH.token) return;
+  try { await Promise.all(need.map(loadMonth)); QUEUE.forEach(applyLocal); derive(); cacheSave(); }
+  catch (e) { if (e.status !== 0) toast(errText(e)); }
+  schedule();
+}
+async function pull() {
+  if (!GH.token) { render(); return; }
+  S.sync = 'loading'; renderChrome();
+  try {
+    const [prof, intake, fav, idx, labs] = await Promise.all(['config/profile.json', 'config/intake.json', 'favorites.json', 'index.json', 'analize.json'].map(loadJson));
+    const months = monthsBetween(addDays(today(), -40), today());
+    if (!months.includes(S.date.slice(0, 7))) months.push(S.date.slice(0, 7));
+    const old = { days: S.days, msgMap: S.msgMap, reqMap: S.reqMap };
+    S.days = {}; S.msgMap = {}; S.reqMap = {}; loadedMonths.clear();
+    try { await Promise.all(months.map(loadMonth)); } catch (e) { Object.assign(S, old); throw e; }
+    Object.assign(S, { profile: prof, intake, favMap: fav || {}, index: idx || {}, labs: labs || {} });
+    QUEUE.forEach(applyLocal); derive(); cacheSave();
+    S.ready = true; S.sync = QUEUE.length ? 'pending' : 'ok';
+    loadJson('config/push.json').then(syncPush, () => {});
+    if (QUEUE.length) sendAll();
+  } catch (e) {
+    S.sync = e.status === 0 ? 'offline' : 'error';
+    if (e.status !== 0) toast(errText(e));
+  }
+  renderChrome(); schedule();
+}
+
+/* ---------- photos and lab files ---------- */
+const PHOTO = {};
+async function fileURL(path) {
+  if (PHOTO[path]) return PHOTO[path];
+  const local = QUEUE.find(o => o.blob && o.file === path);
+  if (local) return (PHOTO[path] = `data:${local.mime || 'image/jpeg'};base64,${local.b64}`);
+  for (const ref of path.startsWith('analize/') ? [GH.branch] : [PHOTO_BRANCH, GH.branch]) {
+    const r = await gh(`/contents/${cpath(path)}?ref=${encodeURIComponent(ref)}`, { headers: { Accept: 'application/vnd.github.raw+json' } });
+    if (r.ok) return (PHOTO[path] = URL.createObjectURL(await r.blob()));
+    if (r.status !== 404) throw new GhError(r.status, 'photo');
+  }
+  throw new GhError(404, 'photo');
+}
+function hydratePhotos(root = document) {
+  $$('img[data-photo]', root).forEach(async img => {
+    if (img.getAttribute('src')) return;
+    try { img.src = await fileURL(img.dataset.photo); }
+    catch (e) { const s = document.createElement('span'); s.className = 'note'; s.textContent = e.status === 404 ? 'Poză ștearsă după estimare' : 'Poza nu s-a putut încărca'; img.replaceWith(s); }
+  });
+}
+const isPdf = p => /\.pdf$/i.test(p);
+const thumb = p => isPdf(p) ? `<button type="button" class="file-pdf" data-act="file" data-path="${esc(p)}">PDF</button>`
+  : `<button type="button" data-act="file" data-path="${esc(p)}" aria-label="Deschide poza"><img data-photo="${esc(p)}" alt="Poză"></button>`;
+async function shrink(file, max) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const s = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const b = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.88));
+    return b ? { blob: b, type: 'image/jpeg' } : { blob: file, type: file.type };
+  } catch (e) { return { blob: file, type: file.type }; }
+}
+const blobB64 = b => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(b); });
+// meal photos: smaller, on the "poze" branch; lab results: sharper (to read the numbers), on main, PDFs as they are
+async function prepareFiles(files, { dir, branch, max }) {
+  const out = []; toast('Se pregătesc fișierele…');
+  for (const f of files) {
+    try {
+      let blob = f, type = f.type;
+      if (f.type === 'application/pdf') { if (f.size > 15e6) { toast('PDF-ul e prea mare (peste 15 MB).'); continue; } }
+      else ({ blob, type } = await shrink(f, max));
+      const ext = type === 'application/pdf' ? 'pdf' : type === 'image/png' ? 'png' : 'jpg';
+      const path = `${dir}/${S.date}-${uid()}.${ext}`;
+      out.push({ file: path, blob: true, branch, mime: type, b64: await blobB64(blob) });
+      if (type.startsWith('image/')) PHOTO[path] = URL.createObjectURL(blob);
+    } catch (e) { toast('Un fișier nu s-a putut pregăti.'); }
+  }
+  return out;
+}
+
+/* ---------- day totals and averages ---------- */
+// The coach writes est on each meal: {kcal, protein, fiber, n: {vitA: µg, ...}, items: [...]}; day.coach may override totals.
+function dayTotals(day) {
+  const meals = day?.meals || [];
+  const est = meals.filter(m => m.est);
+  const t = { meals: meals.length, estimated: est.length, complete: meals.length > 0 && est.length === meals.length, kcal: null, protein: null, fiber: null, n: {} };
+  if (est.length) {
+    t.kcal = est.reduce((s, m) => s + (m.est.kcal || 0), 0);
+    t.protein = est.reduce((s, m) => s + (m.est.protein || 0), 0);
+    t.fiber = est.reduce((s, m) => s + (m.est.fiber || 0), 0);
+    NUTR.forEach(({ key }) => { if (est.some(m => m.est.n?.[key] != null)) t.n[key] = est.reduce((s, m) => s + (m.est.n?.[key] || 0), 0); });
+  }
+  const c = day?.coach;
+  if (c) { ['kcal', 'protein', 'fiber'].forEach(k => { if (c[k] != null) t[k] = c[k]; }); if (c.n) t.n = { ...t.n, ...c.n }; }
+  return t;
+}
+const pctOf = (key, v) => v == null ? null : v / target(key) * 100;
+// averages over finished days (before today) whose meals are all estimated
+function averages(n = 7, end = addDays(today(), -1)) {
+  const dates = [];
+  for (let i = 0; i < n; i++) { const d = addDays(end, -i); if (dayTotals(S.days[d]).complete) dates.push(d); }
+  const avg = { days: dates.length, kcal: null, protein: null, fiber: null, n: {} };
+  if (!dates.length) return avg;
+  const tot = dates.map(d => dayTotals(S.days[d]));
+  const mean = f => { const v = tot.map(f).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+  avg.kcal = mean(t => t.kcal); avg.protein = mean(t => t.protein); avg.fiber = mean(t => t.fiber);
+  NUTR.forEach(({ key }) => { const v = mean(t => t.n[key]); if (v != null) avg.n[key] = v; });
+  return avg;
+}
+const goals = () => { const t = S.profile?.targets || {}; return { kcal: t.kcal, protein: t.protein, fiber: t.fiber ?? 25 }; };
+
+/* ---------- rendering ---------- */
+let pending = false;
+const editing = () => { const a = document.activeElement; return a && $('#view').contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName); };
+function schedule() { if (editing()) { pending = true; return; } render(); }
+document.addEventListener('focusout', () => setTimeout(() => { if (pending && !editing()) { pending = false; render(); } }, 60));
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3600); }
+
+const SYNC = { ok: 'Totul e trimis', loading: 'Se încarcă…', sending: 'Se trimite…', pending: 'De trimis', offline: 'Fără internet', error: 'Netrimis' };
+function renderChrome() {
+  const st = QUEUE.length && S.sync === 'ok' ? 'pending' : S.sync;
+  const sy = $('#sync'); sy.textContent = GH.token ? SYNC[st] || '' : 'Neconectat'; sy.classList.toggle('bad', st === 'error' || !GH.token);
+  $('#dateLabel').textContent = S.date === today() ? `Azi · ${fmtShort(S.date)}` : fmtDate(S.date);
+  $('#datebar').hidden = S.tab !== 'azi';
+  $$('.tabs [data-tab]').forEach(b => b.setAttribute('aria-current', b.dataset.tab === S.tab ? 'page' : 'false'));
+  const un = unread().length; $('.tabs [data-tab="mesaje"]').dataset.badge = un ? String(un) : '';
+  $('#sendBar').hidden = !QUEUE.length || sending || !GH.token;
+  $('#sendBtn').textContent = S.sync === 'offline' ? `Trimite (${QUEUE.length} netrimise)` : 'Trimite ce am notat';
+}
+function render() {
+  renderChrome();
+  const v = $('#view');
+  if (!GH.token) v.innerHTML = connectHTML();
+  else if (!S.ready) v.innerHTML = '<section class="card flat"><p class="empty">Se încarcă datele…</p></section>';
+  else v.innerHTML = ({ azi: viewToday, grafice: viewCharts, analize: viewLabs, mesaje: viewMessages, profil: viewProfile }[S.tab] || viewToday)();
+  hydratePhotos(v);
+  if (S.tab === 'mesaje') markSeen();
+}
+function connectHTML() {
+  return `<section class="card"><h2>Bun venit!</h2><p>Ca să păstrez ce notezi, am nevoie de cheia de acces pe care ți-o dă Mihai. Lipește-o mai jos o singură dată.</p>
+    <label class="f">Cheia de acces<input type="password" id="gh-token" autocomplete="off" placeholder="github_pat_…"></label>
+    <details><summary class="small muted">Setări avansate</summary><div class="grid2" style="margin-top:10px"><label class="f">Cont<input id="gh-owner" value="${esc(GH.owner)}"></label><label class="f">Depozit<input id="gh-repo" value="${esc(GH.repo)}"></label></div></details>
+    <button class="btn primary" data-act="gh-save">Conectează</button></section>`;
+}
+
+function meterHTML(label, v, goal, unit) {
+  return `<div class="meter"><span class="eyebrow">${label}</span><span class="v">${v == null ? '–' : fmtN(v, 0)}</span>
+    <div class="bar"><span style="width:${goal ? Math.min(100, (v || 0) / goal * 100) : 0}%"></span></div><span class="t">${goal ? `din ${fmtN(goal, 0)} ${unit}` : 'ținta urmează'}</span></div>`;
+}
+function nutrRows(values, { colored, ref = 'țintă' } = {}) {
+  return `<div class="nlist">${NUTR.map(n => {
+    const v = values[n.key], pct = pctOf(n.key, v), s = colored ? statusOf(pct) : null;
+    const w = pct == null ? 0 : Math.min(100, pct / 1.5);
+    return `<button class="nrow ${s || ''}" data-act="nutr" data-k="${n.key}" aria-label="${esc(n.name)}: ${pct == null ? 'fără date' : fmtN(pct, 0) + '%'}">
+      <span class="nm">${esc(n.name)} <small>${v == null ? '' : `${fmtN(v, v < 10 ? 1 : 0)} din ${fmtN(target(n.key), 1)} ${n.unit}`}</small></span>
+      <span class="pc">${pct == null ? '–' : fmtN(pct, 0) + '%'} ${stHTML(s)}</span>
+      <span class="track"><span style="width:${w}%"></span><i style="left:${100 / 1.5}%" title="100% din ${ref}"></i></span></button>`;
+  }).join('')}</div>`;
+}
+
+function viewToday() {
+  const d = S.date, day = S.days[d] || {}, t = dayTotals(day), g = goals(), isToday = d === today();
+  const meals = [...(day.meals || [])].sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+  let h = '';
+  if (!S.intake?.submittedAt) h += `<section class="card hi"><h2>Să ne cunoaștem</h2><p>Completează o dată formularul de început: câteva întrebări despre tine și ce mănânci. Pe baza lui stabilesc țintele.</p><button class="btn primary" data-act="intake">Completează formularul</button></section>`;
+  const un = unread();
+  if (un.length) h += `<section class="card"><div class="row between"><span class="eyebrow">De la Claude · ${un.length === 1 ? 'mesaj nou' : un.length + ' mesaje noi'}</span><button class="linkbtn" data-act="tab" data-tab="mesaje">Toate</button></div>
+    <strong>${esc(un[0].title || '')}</strong><p class="pre">${esc(un[0].body || '')}</p></section>`;
+  h += `<section class="card"><div class="row between"><h2>${isToday ? 'Azi' : 'Ziua'}</h2>${meals.length && !t.complete ? `<span class="pill pend">${t.estimated ? `estimat ${t.estimated} din ${t.meals}` : 'estimarea urmează'}</span>` : ''}</div>
+    <div class="totals">${meterHTML('Calorii', t.kcal, g.kcal, 'kcal')}${meterHTML('Proteine', t.protein, g.protein, 'g')}${meterHTML('Fibre', t.fiber, g.fiber, 'g')}</div>
+    ${meals.length && !t.estimated ? '<p class="muted small">Claude estimează mesele la următoarea verificare (din oră în oră).</p>' : ''}
+    ${day.coach?.note ? `<div class="msg"><p class="pre">${esc(day.coach.note)}</p></div>` : ''}</section>`;
+  h += `<div class="row"><button class="btn primary" data-act="meal-new">+ Adaugă masă</button>${favList().length ? '<button class="btn" data-act="favs">Mese favorite</button>' : ''}</div>`;
+  if (!meals.length) h += `<section class="card flat"><p class="empty">Nicio masă notată ${isToday ? 'azi' : 'în ziua asta'}. Scrie ce ai mâncat sau fă o poză farfuriei; restul îl calculează Claude.</p></section>`;
+  else h += `<section class="card">${meals.map(mealHTML).join('')}</section>`;
+  if (t.estimated) h += `<section class="card"><div class="row between"><h3>Vitamine și minerale</h3><span class="muted small">${t.complete && !isToday ? '% din țintă' : 'până acum'}</span></div>
+    ${nutrRows(t.n, { colored: t.complete && !isToday })}<p class="muted small">Linia verticală = 100% din țintă (VNR). Atinge un rând ca să vezi graficul.</p></section>`;
+  h += `<section class="card"><h3>Greutatea</h3><div class="row"><label class="f" style="flex:1">Kilograme (opțional, dimineața)<input type="text" inputmode="decimal" data-weight="${d}" value="${day.weight ?? ''}" placeholder="ex. 54,5"></label></div></section>`;
+  return h;
+}
+const EST_SRC = { cantitate: 'din cantitate', eticheta: 'din etichetă', poza: 'din poză', tipic: 'porție obișnuită' };
+function mealHTML(m) {
+  const typ = MEALT.find(x => x[0] === m.type)?.[1] || m.type;
+  const pendingSend = QUEUE.some(o => o.key === S.date && o.file.startsWith('days/'));
+  return `<div class="meal"><div class="row between"><strong>${esc(typ)}${m.time ? ` · ${esc(m.time)}` : ''}</strong>
+      ${m.est ? `<span class="pill">~${fmtN(m.est.kcal, 0)} kcal</span>` : `<span class="pill pend">${pendingSend ? 'netrimisă încă' : 'estimare în așteptare'}</span>`}</div>
+    ${(m.items || []).map((i, k) => { const e = m.est?.items?.[k]; return `<div class="dish"><span>${esc(i.name || 'Preparat')}${i.qty ? ` · ${esc(i.qty)}` : ''}${i.prep ? ` · <span class="muted">${esc(i.prep)}</span>` : ''}</span>
+      ${i.photos?.length ? `<div class="thumbs">${i.photos.map(thumb).join('')}</div>` : ''}
+      ${e?.kcal != null ? `<span class="small muted">~${fmtN(e.kcal, 0)} kcal · ${fmtN(e.protein, 0)} g proteine${e.fiber ? ` · ${fmtN(e.fiber, 0)} g fibre` : ''}${EST_SRC[e.src] ? ` · ${EST_SRC[e.src]}` : ''}</span>` : ''}</div>`; }).join('')}
+    ${m.notes ? `<p class="note">${esc(m.notes)}</p>` : ''}
+    ${m.est ? `<div class="row"><span class="pill">${fmtN(m.est.protein, 0)} g proteine</span>${m.est.fiber != null ? `<span class="pill">${fmtN(m.est.fiber, 0)} g fibre</span>` : ''}</div>` : ''}
+    ${m.est?.note ? `<p class="note">${esc(m.est.note)}</p>` : ''}
+    <div class="row">${S.confirm === m.id
+      ? `<span class="small">Ștergi masa?</span><button class="btn sm danger" data-act="meal-del" data-id="${m.id}">Da, șterge</button><button class="btn sm ghost" data-act="cancel">Nu</button>`
+      : `<button class="btn sm" data-act="meal-edit" data-id="${m.id}">Modifică</button><button class="btn sm ghost" data-act="meal-star" data-id="${m.id}">★ Favorită</button><button class="btn sm ghost" data-act="ask-del" data-id="${m.id}">Șterge</button>`}</div></div>`;
+}
+
+/* ---------- meal sheet ---------- */
+function mealSheet(meal, isNew) {
+  const m = JSON.parse(JSON.stringify(meal));
+  const blank = () => ({ name: '', qty: '', prep: '', photos: [] });
+  m.items = m.items?.length ? m.items.map(i => ({ ...blank(), ...i, photos: i.photos || [] })) : [blank()];
+  const collect = () => {
+    m.type = $('#m-type').value; m.time = $('#m-time').value; m.notes = $('#m-notes').value.trim();
+    m.items = $$('#sheetPanel [data-row]').map((r, i) => { const o = { photos: m.items[i]?.photos || [] }; $$('[data-k]', r).forEach(x => o[x.dataset.k] = x.value.trim()); return o; });
+  };
+  const draw = () => {
+    const p = $('#sheetPanel');
+    p.innerHTML = `<div class="sheet-head"><h2>${isNew ? 'Masă nouă' : 'Modifică masa'}</h2><button class="iconbtn" data-act="close" aria-label="Închide">×</button></div>
+      <div class="grid2"><label class="f">Masa<select id="m-type">${MEALT.map(([k, n]) => `<option value="${k}" ${m.type === k ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+      <label class="f">Ora<input type="time" id="m-time" value="${esc(m.time || '')}"></label></div>
+      <span class="eyebrow">Ce ai mâncat</span>
+      ${m.items.map((it, i) => `<div class="item-row" data-row="${i}">
+        <label class="f full">Mâncarea<input type="text" data-k="name" value="${esc(it.name)}" placeholder="ex. supă de legume cu tăiței"></label>
+        <label class="f">Cât (dacă știi)<input type="text" data-k="qty" value="${esc(it.qty)}" placeholder="ex. un bol, 150 g"></label>
+        <label class="f">Cum e făcută<select data-k="prep">${PREP.map(x => `<option value="${x}" ${it.prep === x ? 'selected' : ''}>${x || '—'}</option>`).join('')}</select></label>
+        <div class="full">${it.photos.length ? `<div class="thumbs">${it.photos.map((ph, j) => `<span class="ph-thumb"><img data-photo="${esc(ph)}" alt="Poză"><button type="button" class="x" data-rmph="${i}:${j}" aria-label="Scoate poza">×</button></span>`).join('')}</div>` : ''}
+          <div class="row" style="margin-top:8px"><label class="btn sm"><input type="file" accept="image/*" multiple hidden data-phrow="${i}">📷 Poză (farfurie sau etichetă)</label><button class="btn sm ghost" data-rm="${i}">Scoate</button></div></div>
+      </div>`).join('')}
+      <button class="btn sm" id="m-add">+ Încă un fel</button>
+      <label class="f">Observații (opțional)<textarea id="m-notes" placeholder="ex. am mâncat doar jumătate · fără poftă · m-a balonat">${esc(m.notes || '')}</textarea></label>
+      <div class="row"><button class="btn primary" id="m-save">Salvează masa</button><button class="btn ghost" data-act="close">Renunță</button></div>`;
+    $('#m-add').onclick = () => { collect(); m.items.push(blank()); draw(); };
+    $$('[data-rm]', p).forEach(b => b.onclick = () => { collect(); m.items.splice(+b.dataset.rm, 1); if (!m.items.length) m.items.push(blank()); draw(); });
+    $$('[data-rmph]', p).forEach(b => b.onclick = () => { collect(); const [i, j] = b.dataset.rmph.split(':').map(Number); m.items[i].photos.splice(j, 1); draw(); });
+    $$('[data-phrow]', p).forEach(inp => inp.onchange = async () => {
+      collect();
+      const ops = await prepareFiles(inp.files, { dir: 'photos', branch: PHOTO_BRANCH, max: 1600 });
+      PENDING_FILES.push(...ops);
+      m.items[+inp.dataset.phrow].photos.push(...ops.map(o => o.file)); draw();
+    });
+    hydratePhotos(p);
+    $('#m-save').onclick = () => {
+      collect();
+      m.items = m.items.filter(i => i.name || i.photos.length).map(({ photos, ...i }) => ({ ...i, ...(photos.length ? { photos } : {}) }));
+      if (!m.items.length) { toast('Scrie ce ai mâncat sau adaugă o poză.'); return; }
+      const used = new Set(m.items.flatMap(i => i.photos || []));
+      PENDING_FILES.filter(o => used.has(o.file)).forEach(o => { QUEUE.push(o); });
+      PENDING_FILES = [];
+      const list = [...(S.days[S.date]?.meals || [])];
+      const k = list.findIndex(x => x.id === m.id);
+      if (k >= 0) { if (JSON.stringify(list[k].items) !== JSON.stringify(m.items)) delete m.est; list[k] = m; } else list.push(m);
+      closeSheet(); saveDay(S.date, { meals: list }); toast('Masa e notată.');
+    };
+  };
+  PENDING_FILES = [];
+  openSheet(); draw();
+}
+let PENDING_FILES = [];
+const defaultMealType = () => { const h = new Date().getHours(); return h < 10 ? 'mic-dejun' : h < 12 ? 'gustare1' : h < 16 ? 'pranz' : h < 18 ? 'gustare' : 'cina'; };
+const nowTime = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const favList = () => Object.entries(S.favMap).map(([id, f]) => ({ id, ...f })).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+function favSheet() {
+  openSheet();
+  const p = $('#sheetPanel'), list = favList();
+  p.innerHTML = `<div class="sheet-head"><h2>Mese favorite</h2><button class="iconbtn" data-act="close" aria-label="Închide">×</button></div>
+    ${list.length ? list.map(f => `<section class="card"><div class="row between"><strong>${esc(f.name)}</strong><span class="row"><button class="btn sm primary" data-fav="${f.id}">Adaugă</button><button class="btn sm ghost" data-delfav="${f.id}" aria-label="Șterge favorita">×</button></span></div>
+      <p class="muted small">${esc((f.items || []).map(i => i.name + (i.qty ? ' ' + i.qty : '')).join(' · '))}</p></section>`).join('') : '<p class="empty">La o masă notată, apasă „★ Favorită”.</p>'}`;
+  $$('[data-fav]', p).forEach(b => b.onclick = () => { const f = S.favMap[b.dataset.fav]; mealSheet({ id: uid(), type: f.type || defaultMealType(), time: S.date === today() ? nowTime() : '', items: f.items || [] }, true); });
+  $$('[data-delfav]', p).forEach(b => b.onclick = () => { queueOp({ file: 'favorites.json', key: b.dataset.delfav, replace: true, patch: null }); favSheet(); });
+}
+
+/* ---------- charts ---------- */
+function chartWidth() { const v = $('#view'); return Math.max(260, Math.round(v.clientWidth - 32 - 36)); }
+// one series per chart, a dashed reference line for the target, a tap/hover target per day with the exact value
+function svgChart(o) {
+  const W = chartWidth(), H = o.h || 200, L = 44, R = 12, T = 18, B = 26, n = o.dates.length;
+  const vals = o.values.filter(v => v != null);
+  if (!vals.length) return `<p class="empty">Nu sunt încă date în intervalul ales.</p>`;
+  let lo = o.yMin ?? Math.min(...vals, o.ref ?? Infinity), hi = Math.max(...vals, o.ref ?? -Infinity);
+  if (lo === hi) { lo -= 1; hi += 1; }
+  if (o.yMin == null) lo -= (hi - lo) * .1; hi += (hi - lo) * .08;
+  const raw = (hi - lo) / 4, mag = 10 ** Math.floor(Math.log10(raw)), tick = [1, 2, 5, 10].map(m => m * mag).find(s => s >= raw);
+  if (o.yMin == null) lo = Math.floor(lo / tick) * tick; hi = Math.ceil(hi / tick) * tick;
+  const cw = (W - L - R) / n, xc = i => L + (i + .5) * cw, y = v => T + (hi - v) * (H - T - B) / (hi - lo);
+  let g = '';
+  for (let v = lo; v <= hi + 1e-9; v += tick) g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmtN(v, o.dec ?? 0)}</text>`;
+  const step = Math.max(1, Math.ceil(n / Math.max(2, Math.floor((W - L - R) / 70))));
+  for (let i = n - 1; i >= 0; i -= step) g += `<text x="${xc(i)}" y="${H - 7}" text-anchor="middle">${fmtShort(o.dates[i])}</text>`;
+  if (o.type === 'bars') {
+    const bw = Math.max(3, Math.min(26, cw - 2));
+    o.values.forEach((v, i) => { if (v == null) return; const top = y(v), base = y(Math.max(lo, 0)), hgt = Math.max(0, base - top), r = Math.min(4, bw / 2, hgt);
+      g += `<path class="bar" d="M${xc(i) - bw / 2},${base}V${top + r}q0,-${r} ${r},-${r}h${bw - 2 * r}q${r},0 ${r},${r}V${base}z"/>`; });
+  } else {
+    let d = '', pen = false;
+    o.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? 'L' : 'M'}${xc(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
+    g += `<path class="line" d="${d}"/>`;
+    o.values.forEach((v, i) => { if (v != null && (n <= 40 || i === o.values.findLastIndex(x => x != null))) g += `<circle class="dot" cx="${xc(i)}" cy="${y(v)}" r="4"/>`; });
+    const li = o.values.findLastIndex(v => v != null);
+    if (li >= 0) g += `<text class="last" x="${Math.min(xc(li), W - R)}" y="${y(o.values[li]) - 10}" text-anchor="end">${fmtN(o.values[li], o.dec ?? 0)}${o.unit ? ' ' + o.unit : ''}</text>`;
+  }
+  if (o.ref != null) g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(o.ref)}" y2="${y(o.ref)}"/><text class="ref-t" x="${L + 4}" y="${y(o.ref) - 5}">${esc(o.refLabel || 'țintă')}</text>`;
+  o.dates.forEach((dt, i) => { const v = o.values[i]; g += `<rect class="hit" x="${L + i * cw}" y="${T}" width="${cw}" height="${H - T - B}" data-tip="${esc(fmtShort(dt))}: ${v == null ? 'fără date' : fmtN(v, o.dec ?? 0) + (o.unit ? ' ' + o.unit : '')}"/>`; });
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label)}">${g}</svg>`;
+}
+function viewCharts() {
+  const end = addDays(today(), -1), n = S.range, dates = Array.from({ length: n }, (_, i) => addDays(end, i - n + 1));
+  const tots = dates.map(d => { const t = dayTotals(S.days[d]); return t.complete ? t : null; });
+  const avg = averages(7), g = goals(), nk = NK[S.nutr] ? S.nutr : 'vitD', nn = NK[nk];
+  const lacking = NUTR.map(x => ({ ...x, pct: pctOf(x.key, avg.n[x.key]) })).filter(x => x.pct != null && x.pct < 80).sort((a, b) => a.pct - b.pct);
+  let h = `<section class="card"><h2>Ultimele 7 zile</h2>
+    ${avg.days ? `<p class="muted small">Media pe ${avg.days} ${avg.days === 1 ? 'zi completă' : 'zile complete'} (zile cu toate mesele estimate).</p>
+      <div class="totals">${meterHTML('Calorii', avg.kcal, g.kcal, 'kcal')}${meterHTML('Proteine', avg.protein, g.protein, 'g')}${meterHTML('Fibre', avg.fiber, g.fiber, 'g')}</div>`
+      : '<p class="empty">Graficele apar după prima zi încheiată, cu toate mesele estimate.</p>'}</section>`;
+  if (avg.days) {
+    h += `<section class="card"><h3>Ce îți lipsește</h3>${lacking.length ? `<ul class="lack">${lacking.map(x => `<li>${stHTML(statusOf(x.pct))} <strong>${esc(x.name)}</strong>: ${fmtN(x.pct, 0)}% din țintă ${S.index?.foods?.[x.key] ? `<br><span class="small muted">Găsești în: ${esc(S.index.foods[x.key])}</span>` : ''}</li>`).join('')}</ul>` : '<p>Toate vitaminele și mineralele sunt peste 80% din țintă. Foarte bine!</p>'}</section>
+      <section class="card"><div class="row between"><h3>Vitamine și minerale</h3><span class="muted small">media pe 7 zile</span></div>${nutrRows(avg.n, { colored: true })}
+      <p class="muted small">${STATUS.bad[0]} Deficit = sub 50% din țintă · ${STATUS.warn[0]} Sub țintă = 50–80% · ${STATUS.ok[0]} Bine = peste 80%. Ținta e VNR-ul (valoarea de referință de pe etichete), dacă Claude nu a stabilit alta pentru tine.</p></section>`;
+  }
+  h += `<div class="chips">${[[7, '7 zile'], [30, '30 de zile'], [90, '3 luni']].map(([v, l]) => `<button class="chip" data-act="range" data-v="${v}" aria-pressed="${S.range === v}">${l}</button>`).join('')}</div>
+    <section class="card" id="nutrChart"><h3>${esc(nn.name)} pe zile</h3><label class="f">Alege<select data-nutr>${NUTR.map(x => `<option value="${x.key}" ${x.key === nk ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+      ${svgChart({ dates, values: tots.map(t => t?.n[nk] ?? null), type: 'line', ref: target(nk), refLabel: `țintă ${fmtN(target(nk), 1)} ${nn.unit}`, unit: nn.unit, dec: nn.vnr < 20 ? 1 : 0, yMin: 0, label: nn.name })}</section>
+    <section class="card"><h3>Calorii pe zi</h3>${svgChart({ dates, values: tots.map(t => t?.kcal ?? null), type: 'bars', ref: g.kcal, refLabel: g.kcal ? `țintă ${fmtN(g.kcal, 0)}` : '', unit: 'kcal', yMin: 0, label: 'Calorii pe zi' })}</section>
+    <section class="card"><h3>Proteine pe zi (g)</h3>${svgChart({ dates, values: tots.map(t => t?.protein ?? null), type: 'bars', ref: g.protein, refLabel: g.protein ? `țintă ${g.protein} g` : '', unit: 'g', yMin: 0, label: 'Proteine pe zi' })}</section>
+    <section class="card"><h3>Greutatea (kg)</h3>${svgChart({ dates: [...dates.slice(1), today()], values: [...dates.slice(1), today()].map(d => S.days[d]?.weight ?? null), type: 'line', ref: S.profile?.targets?.weightGoal, refLabel: 'obiectiv', unit: 'kg', dec: 1, label: 'Greutatea' })}</section>`;
+  return h;
+}
+
+/* ---------- labs ---------- */
+function viewLabs() {
+  const list = Object.values(S.labs).sort((a, b) => (b.date || '').localeCompare(a.date || '') || (Date.parse(b.ts) || 0) - (Date.parse(a.ts) || 0));
+  let h = `<section class="card"><h2>Analizele mele</h2><p>Fă poze clare la foile de analize (sau încarcă PDF-ul de la laborator). Claude le citește doar când le încarci și îți spune ce înseamnă pentru alimentație.</p>
+    <button class="btn primary" data-act="lab-new">+ Încarcă analize</button>
+    <p class="muted small">Nu înlocuiește medicul: ce iese din normal discuți cu medicul tău.</p></section>`;
+  if (!list.length) h += `<section class="card flat"><p class="empty">Încă nu ai încărcat analize.</p></section>`;
+  list.forEach(l => {
+    const pendingSend = QUEUE.some(o => o.file === 'analize.json' && o.key === l.id);
+    h += `<section class="card"><div class="row between"><h3>Analize din ${l.date ? fmtShort(l.date) + ' ' + l.date.slice(0, 4) : '?'}</h3>
+      <span class="pill ${l.status === 'evaluat' ? '' : 'pend'}">${pendingSend ? 'netrimise încă' : l.status === 'evaluat' ? 'evaluate' : 'Claude le citește'}</span></div>
+      ${l.files?.length ? `<div class="thumbs">${l.files.map(thumb).join('')}</div>` : ''}
+      ${l.note ? `<p class="note">${esc(l.note)}</p>` : ''}
+      ${l.eval?.summary ? `<div class="msg"><p class="pre">${esc(l.eval.summary)}</p></div>` : ''}
+      ${l.eval?.values?.length ? `<table class="lab"><thead><tr><th>Analiză</th><th>Valoare</th><th>Normal</th></tr></thead><tbody>${l.eval.values.map(v => {
+        const s = v.flag === 'mic' || v.flag === 'mare' ? 'bad' : v.flag === 'limita' ? 'warn' : 'ok';
+        return `<tr><td>${esc(v.name)}${v.flag && v.flag !== 'normal' ? `<br><span class="st ${s}">${s === 'bad' ? '▼' : '!'} ${v.flag === 'mic' ? 'scăzut' : v.flag === 'mare' ? 'crescut' : 'la limită'}</span>` : ''}</td><td class="n">${esc(v.value)} ${esc(v.unit || '')}</td><td class="n muted">${esc(v.ref || '')}</td></tr>`;
+      }).join('')}</tbody></table>` : ''}
+      ${S.confirm === l.id ? `<div class="row"><span class="small">Ștergi aceste analize din listă?</span><button class="btn sm danger" data-act="lab-del" data-id="${l.id}">Da</button><button class="btn sm ghost" data-act="cancel">Nu</button></div>`
+        : `<div class="row"><button class="btn sm ghost" data-act="ask-del" data-id="${l.id}">Șterge</button></div>`}</section>`;
+  });
+  return h;
+}
+function labSheet() {
+  openSheet();
+  let files = [];
+  const p = $('#sheetPanel');
+  delete p.dataset.date; delete p.dataset.note;
+  const draw = () => {
+    p.innerHTML = `<div class="sheet-head"><h2>Analize noi</h2><button class="iconbtn" data-act="close" aria-label="Închide">×</button></div>
+      <label class="f">Data recoltării<input type="date" id="l-date" value="${esc(p.dataset.date || today())}"></label>
+      ${files.length ? `<div class="thumbs">${files.map(o => o.mime === 'application/pdf' ? '<span class="file-pdf">PDF</span>' : `<img data-photo="${esc(o.file)}" alt="Pagină">`).join('')}</div>` : ''}
+      <div class="row"><label class="btn"><input type="file" accept="image/*,application/pdf" multiple hidden id="l-files">📄 ${files.length ? 'Mai adaugă pagini' : 'Alege pozele sau PDF-ul'}</label></div>
+      <label class="f">Ceva de spus despre ele? (opțional)<textarea id="l-note" placeholder="ex. le-am făcut la cererea medicului de familie; am luat fier o lună înainte">${esc(p.dataset.note || '')}</textarea></label>
+      <div class="row"><button class="btn primary" id="l-save" ${files.length ? '' : 'disabled'}>Trimite analizele</button><button class="btn ghost" data-act="close">Renunță</button></div>`;
+    hydratePhotos(p);
+    $('#l-files').onchange = async e => {
+      p.dataset.date = $('#l-date').value; p.dataset.note = $('#l-note').value;
+      files.push(...await prepareFiles(e.target.files, { dir: 'analize', branch: 'main', max: 2400 })); draw();
+    };
+    $('#l-save').onclick = () => {
+      const id = 'a' + Date.now().toString(36);
+      files.forEach(o => QUEUE.push(o));
+      queueOp({ file: 'analize.json', key: id, patch: { id, ts: new Date().toISOString(), date: $('#l-date').value || today(), files: files.map(o => o.file), note: $('#l-note').value.trim(), status: 'nou' } });
+      closeSheet(); toast('Analizele pleacă la Claude. Primești un mesaj când le-a citit.');
+    };
+  };
+  draw();
+}
+
+/* ---------- messages ---------- */
+const readIds = () => store.get('nm-read', []);
+const seenAt = () => store.get('nm-seen', '');
+function markSeen() { store.set('nm-seen', new Date().toISOString()); renderChromeBadge(); }
+function renderChromeBadge() { const un = unread().length; $('.tabs [data-tab="mesaje"]').dataset.badge = un ? String(un) : ''; }
+const unread = () => { const s = Date.parse(seenAt()) || 0, r = readIds(); return S.messages.filter(m => (Date.parse(m.ts) || 0) > s && !r.includes(m.id)); };
+const MSG_KIND = { zilnic: 'Ziua de ieri', 'săptămânal': 'Săptămâna', raspuns: 'Răspuns', analize: 'Analize', feedback: '' };
+function viewMessages() {
+  const items = [...S.messages.map(m => ({ who: 'c', ts: m.ts, date: m.date, m })), ...S.requests.map(r => ({ who: 'me', ts: r.ts, date: r.date, r }))]
+    .sort((a, b) => (Date.parse(b.ts) || 0) - (Date.parse(a.ts) || 0));
+  let h = `<section class="card"><h2>Întreabă-l pe Claude</h2>
+    <textarea id="askText" placeholder="ex. Ce pot mânca pentru fier, dacă nu-mi place ficatul? · Azi n-am avut poftă deloc."></textarea>
+    <div class="row"><button class="btn primary" data-act="ask-send">Trimite</button><span class="muted small">Răspunsul vine la următoarea verificare.</span></div></section>`;
+  if (!items.length) h += `<section class="card flat"><p class="empty">Încă nu sunt mesaje.</p></section>`;
+  let last = '';
+  items.forEach(it => {
+    if (it.date !== last) { last = it.date; h += `<h3 class="day-sep">${esc(fmtDate(it.date || today()))}</h3>`; }
+    if (it.who === 'c') { const m = it.m, t = m.ts ? new Date(m.ts) : null;
+      h += `<section class="card"><div class="row between"><span class="eyebrow">Claude${t ? ' · ' + pad(t.getHours()) + ':' + pad(t.getMinutes()) : ''}</span>${MSG_KIND[m.kind] ? `<span class="pill">${MSG_KIND[m.kind]}</span>` : ''}</div><strong>${esc(m.title || '')}</strong><p class="pre">${esc(m.body || '')}</p></section>`; }
+    else { const r = it.r; h += `<section class="card bubble me"><p class="pre">${esc(r.text)}</p><span class="small muted">${QUEUE.some(o => o.key === r.id) ? 'netrimis încă' : r.status === 'rezolvat' ? 'Ai primit răspuns' : 'Trimis · aștept răspunsul'}</span></section>`; }
+  });
+  h += `<button class="btn ghost" data-act="older">Mesajele mai vechi</button>`;
+  return h;
+}
+
+/* ---------- profile, intake form ---------- */
+function viewProfile() {
+  const i = S.intake || {}, t = S.profile?.targets || {};
+  return `<section class="card"><h2>${esc(i.name || 'Profilul meu')}</h2>
+    ${i.submittedAt ? `<dl class="kv">${i.age ? `<dt>Vârsta</dt><dd>${esc(i.age)} ani</dd>` : ''}${i.height ? `<dt>Înălțimea</dt><dd>${esc(i.height)} cm</dd>` : ''}${i.weight ? `<dt>Greutatea (la început)</dt><dd>${esc(i.weight)} kg</dd>` : ''}</dl>` : '<p>Formularul de început nu e completat încă.</p>'}
+    <button class="btn ${i.submittedAt ? '' : 'primary'}" data-act="intake">${i.submittedAt ? 'Modifică formularul' : 'Completează formularul'}</button></section>
+  <section class="card"><h3>Țintele mele</h3>${t.kcal ? `<dl class="kv"><dt>Calorii</dt><dd>${fmtN(t.kcal, 0)} kcal/zi</dd><dt>Proteine</dt><dd>${fmtN(t.protein, 0)} g/zi</dd><dt>Fibre</dt><dd>${fmtN(t.fiber ?? 25, 0)} g/zi</dd>${t.weightGoal ? `<dt>Obiectiv greutate</dt><dd>${fmtN(t.weightGoal, 1)} kg</dd>` : ''}</dl>${t.note ? `<p class="note">${esc(t.note)}</p>` : ''}` : '<p class="muted">Le stabilește Claude după formularul de început.</p>'}
+    ${Object.keys(t.nutrients || {}).length ? `<p class="small">Ținte personale: ${Object.entries(t.nutrients).map(([k, v]) => `${esc(NK[k]?.name || k)} ${fmtN(v, 1)} ${NK[k]?.unit || ''} (VNR ${fmtN(NK[k]?.vnr, 1)})`).join(' · ')}</p>` : ''}</section>
+  <section class="card"><h3>Notificări</h3><p class="small muted">Primești un semn pe telefon când îți scrie Claude.</p>${pushOn() ? '<p>✓ Activate pe acest telefon.</p>' : '<button class="btn" data-act="push-on">Activează notificările</button>'}</section>
+  <section class="card"><h3>Aplicația</h3><p class="small muted">Versiunea ${APP_VERSION} · conectată la ${esc(GH.owner)}/${esc(GH.repo)}</p>
+    <div class="row"><button class="btn sm" data-act="update-app">Caută actualizări</button><button class="btn sm ghost" data-act="pull">Reîncarcă datele</button></div>
+    ${S.confirm === 'forget' ? '<div class="row"><span class="small">Sigur? Va trebui să lipești din nou cheia.</span><button class="btn sm danger" data-act="gh-forget">Da</button><button class="btn sm ghost" data-act="cancel">Nu</button></div>' : '<button class="linkbtn small" data-act="ask-del" data-id="forget">Deconectează acest telefon</button>'}</section>`;
+}
+function intakeSheet() {
+  openSheet();
+  const i = S.intake || {}, p = $('#sheetPanel'), cond = new Set(i.conditions || []);
+  const txt = (k, label, ph, type = 'text') => `<label class="f">${label}<input type="text" ${type === 'num' ? 'inputmode="decimal"' : ''} data-in="${k}" value="${esc(i[k] ?? '')}" placeholder="${esc(ph)}"></label>`;
+  const area = (k, label, ph, cls = '') => `<label class="f">${label}<textarea class="${cls}" data-in="${k}" placeholder="${esc(ph)}">${esc(i[k] || '')}</textarea></label>`;
+  p.innerHTML = `<div class="sheet-head"><h2>Să ne cunoaștem</h2><button class="iconbtn" data-act="close" aria-label="Închide">×</button></div>
+    <p class="muted small">Completează cât știi; orice câmp poate rămâne gol. Poți reveni oricând din Profil.</p>
+    ${txt('name', 'Cum să-ți spun?', 'ex. Maria')}
+    <div class="grid2">${txt('age', 'Vârsta (ani)', 'ex. 62', 'num')}${txt('height', 'Înălțimea (cm)', 'ex. 162', 'num')}
+    ${txt('weight', 'Greutatea acum (kg)', 'ex. 52', 'num')}${txt('weightBefore', 'Greutatea obișnuită, înainte (kg)', 'ex. 60', 'num')}</div>
+    ${txt('lossWhen', 'În cât timp ai slăbit?', 'ex. în ultimele 4 luni')}
+    <span class="eyebrow">Ai vreuna dintre acestea?</span>
+    <div class="chips">${CONDITIONS.map(c => `<button type="button" class="chip" data-cond="${esc(c)}" aria-pressed="${cond.has(c)}">${esc(c)}</button>`).join('')}</div>
+    ${area('allergiesMeds', 'Medicamentele la care ai avut reacții alergice', 'ex. amoxicilină: urticarie')}
+    ${area('allergiesFood', 'Alimente la care ai alergie sau intoleranță', 'ex. lapte (balonare), căpșuni')}
+    ${area('avoid', 'Ce nu mănânci sau nu-ți place', 'ex. ficat, pește, mâncare picantă')}
+    ${area('dietNow', 'Ce regim ai ținut / ce ai voie acum', 'ex. regim fără … de la medic, din martie')}
+    ${area('meds', 'Medicamente pe care le iei acum', 'ex. Euthyrox 50 dimineața')}
+    ${area('supplements', 'Suplimente (vitamine, minerale)', 'ex. vitamina D 2000 UI, magneziu')}
+    <div class="grid2"><label class="f">Pofta de mâncare<select data-in="appetite">${['', 'foarte mică', 'mică', 'normală', 'bună'].map(v => `<option ${i.appetite === v ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+    <label class="f">Mese pe zi, de obicei<select data-in="mealsPerDay">${['', '1–2', '3', '4–5', '6+'].map(v => `<option ${i.mealsPerDay === v ? 'selected' : ''}>${v}</option>`).join('')}</select></label></div>
+    ${area('typicalDay', 'Ce mănânci într-o zi obișnuită', 'mic dejun, prânz, cină, gustări')}
+    ${area('story', 'Povestea ta, cu cuvintele tale', 'Scrie liber: ce s-a întâmplat, cum te simți, ce ai vrea să schimbi, ce îți e greu…', 'long')}
+    <div class="row"><button class="btn primary" id="in-save">Trimite formularul</button><button class="btn ghost" data-act="close">Mai târziu</button></div>`;
+  $$('[data-cond]', p).forEach(b => b.onclick = () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'));
+  $('#in-save').onclick = () => {
+    const out = {};
+    $$('[data-in]', p).forEach(x => { const v = x.value.trim(); out[x.dataset.in] = ['age', 'height', 'weight', 'weightBefore'].includes(x.dataset.in) ? toNum(v) : v; });
+    out.conditions = $$('[data-cond][aria-pressed="true"]', p).map(b => b.dataset.cond);
+    out.submittedAt = new Date().toISOString(); out.status = 'nou';
+    queueOp({ file: 'config/intake.json', key: null, patch: out });
+    if (out.weight && !S.days[today()]?.weight) saveDay(today(), { weight: out.weight });
+    closeSheet(); toast('Mulțumesc! Claude îți scrie după ce citește formularul.');
+  };
+}
+
+/* ---------- push notifications (same key pair as Mihai's app; subscriptions in this data repo) ---------- */
+const VAPID_PUBLIC = 'BHnS7sEmWIRT9J_coOPF53sBi5uDjp-q4158fg5wX9kFWPrv-_RYE-K11vL7kErsHIBcZ_gaBACV6g5PrpDm8AE';
+function b64urlToBytes(s) { const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); }
+function deviceId() { let id = store.get('nm-device', ''); if (!id) { id = 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); store.set('nm-device', id); } return id; }
+const newPushSub = reg => reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64urlToBytes(VAPID_PUBLIC) });
+async function savePushSub(sub) {
+  const path = 'config/push.json';
+  await commitTo(GH.branch, async () => {
+    const data = JSON.parse(await readAt(path, GH.branch) || '{}');
+    data[deviceId()] = sub.toJSON(); FILES[path] = { data };
+    return { entries: [{ path, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 1) + '\n' }] };
+  }, 'Jurnal: notificări');
+}
+async function enablePush(btn) {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) { toast('Telefonul ăsta nu suportă notificări din aplicație.'); return; }
+  btn.disabled = true;
+  try {
+    if (await Notification.requestPermission() !== 'granted') { toast('Fără permisiune nu pot trimite notificări.'); btn.disabled = false; return; }
+    const reg = await navigator.serviceWorker.ready;
+    const old = await reg.pushManager.getSubscription(); if (old) await old.unsubscribe().catch(() => {});
+    await savePushSub(await newPushSub(reg));
+    store.set('nm-push', '1'); toast('Notificările sunt activate.'); render();
+  } catch (e) { toast('Nu am putut activa notificările.'); btn.disabled = false; }
+}
+const pushOn = () => { try { return store.get('nm-push', '') === '1' && Notification.permission === 'granted'; } catch (e) { return false; } };
+async function syncPush() {
+  if (!pushOn() || !('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = (await reg.pushManager.getSubscription()) || await newPushSub(reg);
+    if (FILES['config/push.json']?.data?.[deviceId()]?.endpoint !== sub.endpoint) await savePushSub(sub);
+  } catch (e) {}
+}
+
+/* ---------- sheets, tooltips ---------- */
+function openSheet() { $('#sheet').hidden = false; document.body.style.overflow = 'hidden'; }
+function closeSheet() { $('#sheet').hidden = true; document.body.style.overflow = ''; $('#sheetPanel').innerHTML = ''; PENDING_FILES = []; }
+$('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+function showTip(el) {
+  const tip = $('#tip'), r = el.getBoundingClientRect();
+  $$('.hit.on').forEach(x => x.classList.remove('on')); el.classList.add('on');
+  tip.textContent = el.dataset.tip; tip.hidden = false;
+  tip.style.left = Math.min(innerWidth - 80, Math.max(80, r.left + r.width / 2)) + 'px'; tip.style.top = (r.top + 24) + 'px';
+}
+function hideTip() { $('#tip').hidden = true; $$('.hit.on').forEach(x => x.classList.remove('on')); }
+document.addEventListener('pointerover', e => { const h = e.target.closest?.('.hit'); if (h) showTip(h); else if (e.pointerType === 'mouse') hideTip(); });
+addEventListener('scroll', hideTip, { passive: true });
+
+/* ---------- events ---------- */
+document.addEventListener('click', async e => {
+  const h = e.target.closest('.hit'); if (h) { showTip(h); return; }
+  hideTip();
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'tab') { S.tab = b.dataset.tab; S.confirm = null; try { localStorage.setItem('nm-tab', S.tab); } catch (er) {} render(); scrollTo(0, 0); if (S.tab === 'grafice') ensureRange(addDays(today(), -S.range), today()); }
+  else if (a === 'day') { S.date = addDays(S.date, +b.dataset.n); if (S.date > today()) S.date = today(); S.confirm = null; render(); ensureRange(S.date, S.date); }
+  else if (a === 'today') { S.date = today(); render(); }
+  else if (a === 'pull') pull();
+  else if (a === 'send') sendAll();
+  else if (a === 'meal-new') mealSheet({ id: uid(), type: defaultMealType(), time: S.date === today() ? nowTime() : '', items: [] }, true);
+  else if (a === 'meal-edit') { const m = (S.days[S.date]?.meals || []).find(x => x.id === b.dataset.id); if (m) mealSheet(m, false); }
+  else if (a === 'meal-del') { S.confirm = null; saveDay(S.date, { meals: (S.days[S.date]?.meals || []).filter(x => x.id !== b.dataset.id) }); toast('Masa a fost ștearsă.'); }
+  else if (a === 'meal-star') { const m = (S.days[S.date]?.meals || []).find(x => x.id === b.dataset.id); if (m) { queueOp({ file: 'favorites.json', key: uid(), patch: { name: (m.items || []).map(i => i.name).filter(Boolean).slice(0, 3).join(', ') || 'Masă', type: m.type, items: (m.items || []).map(({ photos, ...i }) => i) } }); toast('Masa e la favorite.'); } }
+  else if (a === 'favs') favSheet();
+  else if (a === 'ask-del') { S.confirm = b.dataset.id; render(); }
+  else if (a === 'cancel') { S.confirm = null; render(); }
+  else if (a === 'nutr') { S.nutr = b.dataset.k; S.tab = 'grafice'; try { localStorage.setItem('nm-tab', 'grafice'); } catch (er) {} render(); $('#nutrChart')?.scrollIntoView({ block: 'start' }); }
+  else if (a === 'range') { S.range = +b.dataset.v; render(); ensureRange(addDays(today(), -S.range), today()); }
+  else if (a === 'lab-new') labSheet();
+  else if (a === 'lab-del') { S.confirm = null; queueOp({ file: 'analize.json', key: b.dataset.id, replace: true, patch: null }); delete S.labs[b.dataset.id]; render(); }
+  else if (a === 'file') {
+    const path = b.dataset.path;
+    if (isPdf(path)) { try { const u = await fileURL(path); window.open(u, '_blank'); } catch (er) { toast('Fișierul nu s-a putut deschide.'); } return; }
+    openSheet(); $('#sheetPanel').innerHTML = `<div class="sheet-head"><h2>Poză</h2><button class="iconbtn" data-act="close" aria-label="Închide">×</button></div><img data-photo="${esc(path)}" alt="Poză" style="border-radius:12px">`; hydratePhotos($('#sheetPanel'));
+  }
+  else if (a === 'ask-send') {
+    const txt = ($('#askText')?.value || '').trim();
+    if (!txt) { toast('Scrie întâi întrebarea.'); return; }
+    const id = 'r' + Date.now().toString(36);
+    queueOp({ file: `requests/${today().slice(0, 7)}.json`, key: id, patch: { id, ts: new Date().toISOString(), date: today(), text: txt.slice(0, 3000), status: 'nou' } });
+  }
+  else if (a === 'older') { await ensureRange(addDays(today(), -365), today()); render(); }
+  else if (a === 'intake') intakeSheet();
+  else if (a === 'push-on') enablePush(b);
+  else if (a === 'update-app') { toast('Caut actualizări…'); try { const reg = await navigator.serviceWorker?.getRegistration(); await reg?.update(); } catch (er) {} location.reload(); }
+  else if (a === 'close') closeSheet();
+  else if (a === 'gh-save') {
+    const tok = ($('#gh-token')?.value || '').replace(/\s+/g, '');
+    if (!/^(github_pat_|ghp_)[A-Za-z0-9_]{20,}$/.test(tok)) { toast('Cheia trebuie să înceapă cu „github_pat_”. Copiaz-o din nou, întreagă.'); return; }
+    GH.owner = $('#gh-owner').value.trim() || GH.owner; GH.repo = $('#gh-repo').value.trim() || GH.repo; GH.token = tok;
+    store.set('nm-gh', GH); toast('Conectat. Încarc datele…'); S.ready = false; pull();
+  }
+  else if (a === 'gh-forget') { GH.token = ''; store.set('nm-gh', GH); store.set('nm-cache', null); S.ready = false; S.confirm = null; render(); }
+});
+$('#view').addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.weight) { const v = toNum(el.value); if (v != null && (v < 25 || v > 200)) { toast('Greutatea pare greșită.'); return; } saveDay(el.dataset.weight, { weight: v }); toast('Greutatea e notată.'); }
+  else if (el.dataset.nutr != null) { S.nutr = el.value; render(); }
+});
+
+/* ---------- boot ---------- */
+function init() {
+  if (GH.token) cacheLoad();
+  render();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  pull();
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && GH.token && !sending) pull(); });
+  addEventListener('online', () => { if (GH.token) { pull(); } });
+  addEventListener('offline', () => { S.sync = 'offline'; renderChrome(); });
+  let w = innerWidth; addEventListener('resize', () => { if (S.tab === 'grafice' && Math.abs(innerWidth - w) > 40) { w = innerWidth; render(); } });
+}
+init();
+</script>
+</body>
+</html>
