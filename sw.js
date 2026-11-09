@@ -1,6 +1,6 @@
 // Network-first for the app's own files so updates arrive on the next open; cached copy when offline.
 // GitHub API calls are never cached here: the page talks to api.github.com directly.
-const CACHE = 'nm-v2';
+const CACHE = 'nm-v3';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {

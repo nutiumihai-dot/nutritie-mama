@@ -351,7 +351,7 @@ function commitMessage(ops) {
   return `Jurnal: ${parts.join(' · ') || 'actualizare'}`;
 }
 
-const APP_VERSION = 'v2';
+const APP_VERSION = 'v3';
 const PHOTO_BRANCH = 'poze';
 async function commitTo(branch, build, message) {
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -610,14 +610,16 @@ function viewToday() {
   h += `<section class="card"><h3>Greutatea</h3><div class="row"><label class="f" style="flex:1">Kilograme (opțional, dimineața)<input type="text" inputmode="decimal" data-weight="${d}" value="${day.weight ?? ''}" placeholder="ex. 54,5"></label></div></section>`;
   return h;
 }
-const EST_SRC = { cantitate: 'din cantitate', eticheta: 'din etichetă', poza: 'din poză', tipic: 'porție obișnuită' };
+const EST_SRC = { cantitate: 'din cantitate', eticheta: 'din etichetă', reteta: 'din ingrediente', poza: 'din poză', tipic: 'porție obișnuită' };
 function mealHTML(m) {
   const typ = MEALT.find(x => x[0] === m.type)?.[1] || m.type;
   const pendingSend = QUEUE.some(o => o.key === S.date && o.file.startsWith('days/'));
   return `<div class="meal"><div class="row between"><strong>${esc(typ)}${m.time ? ` · ${esc(m.time)}` : ''}</strong>
       ${m.est ? `<span class="pill">~${fmtN(m.est.kcal, 0)} kcal</span>` : `<span class="pill pend">${pendingSend ? 'netrimisă încă' : 'estimare în așteptare'}</span>`}</div>
     ${(m.items || []).map((i, k) => { const e = m.est?.items?.[k]; return `<div class="dish"><span>${esc(i.name || 'Preparat')}${i.qty ? ` · ${esc(i.qty)}` : ''}${i.prep ? ` · <span class="muted">${esc(i.prep)}</span>` : ''}</span>
+      ${i.ingredients ? `<span class="small muted">Ingrediente: ${esc(i.ingredients)}</span>` : ''}
       ${i.photos?.length ? `<div class="thumbs">${i.photos.map(thumb).join('')}</div>` : ''}
+      ${e?.found ? `<span class="small muted">Claude: ${esc(e.found)}</span>` : ''}
       ${e?.kcal != null ? `<span class="small muted">~${fmtN(e.kcal, 0)} kcal · ${fmtN(e.protein, 0)} g proteine${e.fiber ? ` · ${fmtN(e.fiber, 0)} g fibre` : ''}${EST_SRC[e.src] ? ` · ${EST_SRC[e.src]}` : ''}</span>` : ''}</div>`; }).join('')}
     ${m.notes ? `<p class="note">${esc(m.notes)}</p>` : ''}
     ${m.est ? `<div class="row"><span class="pill">${fmtN(m.est.protein, 0)} g proteine</span>${m.est.fiber != null ? `<span class="pill">${fmtN(m.est.fiber, 0)} g fibre</span>` : ''}</div>` : ''}
@@ -630,7 +632,7 @@ function mealHTML(m) {
 /* ---------- meal sheet ---------- */
 function mealSheet(meal, isNew) {
   const m = JSON.parse(JSON.stringify(meal));
-  const blank = () => ({ name: '', qty: '', prep: '', photos: [] });
+  const blank = () => ({ name: '', qty: '', prep: '', ingredients: '', photos: [] });
   m.items = m.items?.length ? m.items.map(i => ({ ...blank(), ...i, photos: i.photos || [] })) : [blank()];
   const collect = () => {
     m.type = $('#m-type').value; m.time = $('#m-time').value; m.notes = $('#m-notes').value.trim();
@@ -646,6 +648,7 @@ function mealSheet(meal, isNew) {
         <label class="f full">Mâncarea<input type="text" data-k="name" value="${esc(it.name)}" placeholder="ex. supă de legume cu tăiței"></label>
         <label class="f">Cât (dacă știi)<input type="text" data-k="qty" value="${esc(it.qty)}" placeholder="ex. un bol, 150 g"></label>
         <label class="f">Cum e făcută<select data-k="prep">${PREP.map(x => `<option value="${x}" ${it.prep === x ? 'selected' : ''}>${x || '—'}</option>`).join('')}</select></label>
+        <label class="f full">Ingrediente (dacă e gătită)<textarea data-k="ingredients" rows="3" placeholder="ex. 2 pulpe de pui, 2 morcovi, o ceapă, un cartof, o lingură de ulei, smântână">${esc(it.ingredients || '')}</textarea></label>
         <div class="full">${it.photos.length ? `<div class="thumbs">${it.photos.map((ph, j) => `<span class="ph-thumb"><img data-photo="${esc(ph)}" alt="Poză"><button type="button" class="x" data-rmph="${i}:${j}" aria-label="Scoate poza">×</button></span>`).join('')}</div>` : ''}
           <div class="row" style="margin-top:8px"><label class="btn sm"><input type="file" accept="image/*" multiple hidden data-phrow="${i}">📷 Poză (farfurie sau etichetă)</label><button class="btn sm ghost" data-rm="${i}">Scoate</button></div></div>
       </div>`).join('')}
@@ -664,7 +667,7 @@ function mealSheet(meal, isNew) {
     hydratePhotos(p);
     $('#m-save').onclick = () => {
       collect();
-      m.items = m.items.filter(i => i.name || i.photos.length).map(({ photos, ...i }) => ({ ...i, ...(photos.length ? { photos } : {}) }));
+      m.items = m.items.filter(i => i.name || i.ingredients || i.photos.length).map(({ photos, ingredients, ...i }) => ({ ...i, ...(ingredients ? { ingredients } : {}), ...(photos.length ? { photos } : {}) }));
       if (!m.items.length) { toast('Scrie ce ai mâncat sau adaugă o poză.'); return; }
       const used = new Set(m.items.flatMap(i => i.photos || []));
       PENDING_FILES.filter(o => used.has(o.file)).forEach(o => { QUEUE.push(o); });
